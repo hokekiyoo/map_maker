@@ -15,32 +15,38 @@
   <script>
     var pin_black = "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170729/20170729233434.png";
     var pin_red   = "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170729/20170729233449.png";
-    var markersJP = [
-      { latLng: [35.011636, 135.768029], city: "京都", 
+      var sample_dataJ = {"Hokkaido":54.2, "Kyoto":46.3, "Tokyo":35.1, "Okinawa":32.7, "Kanagawa":30.2, "Nara":28.7, "Osaka":24.1, "Nagano":24.0, "Ishikawa":23.3, "Fukuoka":21.4, "Nagasaki":20.0, "Shizuoka":17.6, "Aichi":17.2, "Miyagi":16.8, "Oita":16.5, "Hyogo":16.3, "Aomori":15.8, "Toyama":15.4, "Akita":14.9, "Chiba":14.4, "Kumamoto":14.2, "Kagoshima":14.2, "Hiroshima":14.0, "Miyazaki":13.4, "Ehime":13.1, "Mie":12.6, "Shimane":12.4, "Wakayama":12.0, "Kochi":11.9, "Yamanashi":11.7, "Okayama":11.4, "Yamaguchi":11.3, "Shiga":10.9, "Kagawa":10.8, "Niigata":10.5, "Iwate":10.3, "Yamagata":10.0, "Saga":9.4, "Fukushima":9.2, "Saitama":9.2, "Fukui":9.1, "Gifu":9.0, "Tottori":9.0, "Tokushima":9.0,"Gunma":8.5, "Tochigi":7.8, "Ibaraki":7.7};
+    var markersJP = [ 
+      { latLng: [35, 135], country: "Japan", city: "Kyoto", 
         img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170702/20170702111519.jpg",
         title : "京都の最強パワースポット『三千院』の雰囲気が最高だった",
         page:true, url : "http://www.procrasist.com/entry/3000-temple" },
-      { latLng: [36.401774, 140.592057], city:"茨城", 
+      { latLng: [35, 140], country: "Japan", city: "Ibaraki", 
         img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170426/20170426044454.jpg",
         title : "美しすぎる青の絨毯、ひたち海浜公園の『ネモフィラ』",
         page:true, url : "http://www.procrasist.com/entry/hitachi-nemophila" },
-      { latLng: [36.270806, 136.898478], country: "Japan", city: "Gifu", 
+      { latLng: [36.16, 136.5], country: "Japan", city: "Gifu", 
         img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170406/20170406232850.jpg",
         title : "【旅と写真】魅惑の岐阜県物語 in 高山・白川郷",
         page:true, url : "http://www.procrasist.com/entry/gifu-1" },
+      { latLng: [24.2, 123.5], country: "Japan", city: "Okinawa", 
+        img : "https://lh3.googleusercontent.com/AMTniNf0dj3P1xss1J2zOH-fNtOAI6IefqNTUHQ5jpPKG6XpO_0ZXvlzTg9--3S5O1cECYqvsUYvWOQIXuPESHYKB31x4QFcEfoFivCigz5IVEfHeCpz5A065s8LHlh2Lon8sfgngFYVzAvfT0LI4WIn-dUi5iMJCvZQqmNrNITdeiJ10iO2GopmoxW9QgIfh_W4QtlEK-qn5FA1UJI0dFZKdJL7YH7PiUNAv8p2RfpXMMHv2M5NxD733bZLS8qACggux6npmBqMlByl21ZJpAxkNrqJanpfctey2cd4qe6vzOgVLscLSgkwl-cJR_xdkgQ7qJTKQb7VRm0NQ_hh-GLrqXqmbfJ4TaiqVIj7w67ZT5qubdGrX7_PMGXpquosm6mYL721eg9ydIu1AqVIe9H75tbwSXnBnxLhZjflKj8tOhDDC2ZqXTlUjA_lZesX00Sw4ZeERYFtPjyxWv3dAorJBytvdbL6qfdZUr1-3usRHg_cW83aHOphVApx7-o4dzidk0Yz1K5P9mgvu8Rdqt_zMop3tvv_yIWkT1lyLLhZdQgC67h4p2j84AymyE0bhqbeU-E2Bk_kHQDXhWKyDWD47Og8yNl_kO_D7fibaE77X2lg-iE9nVmL=w1690-h1126-no",
+        title : "西表の海",
+        page:false,
+      },
     ];
     $( () => {
       var map2 = new jvm.Map({
         container: $('#jp-map'),
         map: 'jp_merc',
-        // onRegionTipShow: ( e, el, code ) => {
-        //   el.html( el.html() );
-        //   console.log(code);
-        // },
-        backgroundColor: "#448AFF",
+        onRegionTipShow: ( e, el, code ) => {
+          el.html( el.html() );
+          console.log(code);
+        },
+        backgroundColor: null,
         enableZoom: false,
         showTooltip: false,
-        regionsSelectable: false,
+        regionsSelectable: true,
         markersSelectable: true,
 
         hoverOpacity: 0.7,
@@ -49,11 +55,14 @@
             fill: '#666666'
           }
         },
+        series: {
+          regions: [{
+            values: sample_dataJ,
+            scale: ["#c8eeff", "#0071a4"],
+            normalizeFunction: "polynomial"
+          }],
+        },
         markerStyle: {
-          // initial: {
-          //   fill: "#444444",
-          //   stroke: "#383f47"
-          // }
           initial:{
             image:pin_black
           },
@@ -72,7 +81,7 @@
                     "<span style='font-size:15px;font-weigh:bold;'>"+markersJP[code].title+"</span>"+
                     "<br>Country : "+markersJP[code].country+
                     "<br>City    : "+markersJP[code].city+
-                    "<center><img width='80%', height='80%' src='"+markers[code].img +"'>"+
+                    "<center><img width='80%', height='80%' src='"+markersJP[code].img +"'>"+
                     "</center></div>"+
                     "<style type='text/css'> div#marker{width:240px; height:100%; background-color: #222222;}"
             );
@@ -95,8 +104,7 @@
           }
         }
       });
-      console.log(map);
     });
-  </script>
+   </script>
 </body>
 </html>
