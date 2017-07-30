@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <title>World Map</title>
+<head>
+  <!--map plugin-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.4/jquery-jvectormap.css" type="text/css" media="screen"/>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="http://jvectormap.com/js/jquery-jvectormap-2.0.3.min.js"></script>
+  <script src="http://jvectormap.com/js/jquery-jvectormap-world-merc.js"></script>
+  <script type="text/javascript" src="https://jqvmap.com/js/vmap/jquery.vmap.sampledata.js?v=1.5.0" charset="utf-8"></script>
+</head>
+<body>
+<h2>World Map</h2>
+  <center>
+  <div id="world-map" style="width: 600px; height: 400px"></div>
+  </center>
+  <script>
+    var sample_dataL = {};
+    for( var tag in sample_data )
+      sample_dataL[tag.toUpperCase()] = sample_data[tag];
+    var pin_black = "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170729/20170729233434.png";
+    var pin_red   = "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170729/20170729233449.png";
+    var markers = [
+      { latLng: [51.160523, 71.470356], country:"Kazakhstan", city: "Astana",
+        img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170116/20170116013149.png",
+        title : "今年はカザフスタンが熱い！日本人だからこそ行くべき『超近未来都市』",
+        page:true, url : "http://www.procrasist.com/entry/kazakhstan",
+      },
+      { latLng: [41.715138, 44.827096], country: "Georgia", city: "Tbilisi", 
+        img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170121/20170121204324.png",
+        title : "【旅好き必見!!】個性的な建築物の宝庫！ジョージア(グルジア)の魅力",
+        page:true, url : "http://www.procrasist.com/entry/georgia", },
+      { latLng: [35.011636, 135.768029], country: "Japan", city: "Kyoto", 
+        img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170702/20170702111519.jpg",
+        title : "京都の最強パワースポット『三千院』の雰囲気が最高だった",
+        page:true, url : "http://www.procrasist.com/entry/3000-temple" },
+      { latLng: [36.401774, 140.592057], country: "Japan", city: "Ibaraki", 
+        img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170426/20170426044454.jpg",
+        title : "美しすぎる青の絨毯、ひたち海浜公園の『ネモフィラ』",
+        page:true, url : "http://www.procrasist.com/entry/hitachi-nemophila" },
+    ];
+    $( () => {
+      var map = new jvm.Map({
+        container: $("#world-map"),
+        map: "world_merc",
+        markers: markers,
+        series: {
+          regions: [{
+            values: sample_dataL,
+            scale: ["#c8eeff", "#0071a4"],
+            normalizeFunction: "polynomial"
+          }],
+        },
+        backgroundColor: "#ffffff",
+        enableZoom: false,
+        showTooltip: false,
+        regionsSelectable: false,
+        markersSelectable: true,
+        hoverOpacity: 0.7,
+        regionStyle: {
+          selected: {
+            fill: "#666666"
+          }
+        },
+        markerStyle: {
+          initial:{
+            image:pin_black
+          },
+          hover:{
+            image:pin_red
+          }
+        },
+        onRegionSelected: () => {
+          var xs = map.getSelectedRegions();
+          console.log( xs.map( x => map.mapData.paths[x].name+" ("+x+")" ) );
+        },
+        onMarkerTipShow:(e, el, code) =>{
+          if(markers[code].page){
+            el.html("<div id='marker'>"+
+                    "<span style='font-size:15px;font-weigh:bold;'>"+markers[code].title+"</span>"+
+                    "<br>Country : "+markers[code].country+
+                    "<br>City    : "+markers[code].city+
+                    "<center><img width='80%', height='80%' src='"+markers[code].img +"'>"+
+                    "</center></div>"+
+                    "<style type='text/css'> div#marker{width:240px; height:100%; background-color: #222222;}"
+            );
+          }
+          else{
+            el.html("<div id='marker'>"+
+                    "<span style='font-size:15px;font-weigh:bold;color:#666666'>"+markers[code].title+
+                    "<br>Country : "+markers[code].country+
+                    "<br>City    : "+markers[code].city+
+                    "<center><img width='80%', height='80%' src='"+markers[code].img +"'>"+"</span>"+
+                    "</center></div>"+
+                    "<style type='text/css'> div#marker{width:240px; height:100%;}"
+            );
+          }
+        },
+        onMarkerClick: (e, code) => {
+          if(markers[code].page){
+            console.log(markers[code].url); 
+            open(markers[code].url,"blank_")
+          }
+        }
+      });
+      console.log(map);
+    });
+  </script>  
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--map plugin-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jvectormap/2.0.4/jquery-jvectormap.css" type="text/css" media="screen"/>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="http://jvectormap.com/js/jquery-jvectormap-2.0.3.min.js"></script>
+  <script src="https://rawgit.com/hokekiyoo/jVectormapJP/master/jquery-jvectormap-jp-merc.js"></script>
+</head>
+<body>
+<h2>Japan Map</h2>
+  <center>
+  <div id="jp-map" style="width: 600px; height: 350px;"></div>
+  </center>
+  <script>
+    var pin_black = "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170729/20170729233434.png";
+    var pin_red   = "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170729/20170729233449.png";
+    var markersJP = [
+      { latLng: [35.011636, 135.768029], city: "京都", 
+        img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170702/20170702111519.jpg",
+        title : "京都の最強パワースポット『三千院』の雰囲気が最高だった",
+        page:true, url : "http://www.procrasist.com/entry/3000-temple" },
+      { latLng: [36.401774, 140.592057], city:"茨城", 
+        img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170426/20170426044454.jpg",
+        title : "美しすぎる青の絨毯、ひたち海浜公園の『ネモフィラ』",
+        page:true, url : "http://www.procrasist.com/entry/hitachi-nemophila" },
+      { latLng: [36.270806, 136.898478], country: "Japan", city: "Gifu", 
+        img : "https://cdn-ak.f.st-hatena.com/images/fotolife/i/imslotter/20170406/20170406232850.jpg",
+        title : "【旅と写真】魅惑の岐阜県物語 in 高山・白川郷",
+        page:true, url : "http://www.procrasist.com/entry/gifu-1" },
+    ];
+    $( () => {
+      var map2 = new jvm.Map({
+        container: $('#jp-map'),
+        map: 'jp_merc',
+        // onRegionTipShow: ( e, el, code ) => {
+        //   el.html( el.html() );
+        //   console.log(code);
+        // },
+        backgroundColor: "#448AFF",
+        enableZoom: false,
+        showTooltip: false,
+        regionsSelectable: false,
+        markersSelectable: true,
+
+        hoverOpacity: 0.7,
+        regionStyle: {
+          selected: {
+            fill: '#666666'
+          }
+        },
+        markerStyle: {
+          // initial: {
+          //   fill: "#444444",
+          //   stroke: "#383f47"
+          // }
+          initial:{
+            image:pin_black
+          },
+          hover:{
+            image:pin_red
+          }
+        },
+        markers: markersJP,
+        onRegionSelected: () => {
+          var xs = map.getSelectedRegions();
+          console.log( xs.map( x => map.mapData.paths[x].name+" ("+x+")" ) );
+        },
+        onMarkerTipShow:(e, el, code) =>{
+          if(markersJP[code].page){
+            el.html("<div id='marker'>"+
+                    "<span style='font-size:15px;font-weigh:bold;'>"+markersJP[code].title+"</span>"+
+                    "<br>Country : "+markersJP[code].country+
+                    "<br>City    : "+markersJP[code].city+
+                    "<center><img width='80%', height='80%' src='"+markers[code].img +"'>"+
+                    "</center></div>"+
+                    "<style type='text/css'> div#marker{width:240px; height:100%; background-color: #222222;}"
+            );
+          }
+          else{
+            el.html("<div id='marker'>"+
+                    "<span style='font-size:15px;font-weigh:bold;color:#666666'>"+markersJP[code].title+
+                    "<br>Country : "+markersJP[code].country+
+                    "<br>City    : "+markersJP[code].city+
+                    "<center><img width='80%', height='80%' src='"+markersJP[code].img +"'>"+"</span>"+
+                    "</center></div>"+
+                    "<style type='text/css'> div#marker{width:240px; height:100%;}"
+            );
+          }
+        },
+        onMarkerClick: (e, code) => {
+          if(markersJP[code].page){
+            console.log(markersJP[code].url); 
+            open(markersJP[code].url,"blank_")
+          }
+        }
+      });
+      console.log(map);
+    });
+  </script>
+</body>
+</html>
